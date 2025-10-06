@@ -231,8 +231,7 @@ func (c *UserClient) GetMeasure(ctx context.Context, param GetMeasureParam) (Mea
 // retrieved.
 func (c *UserClient) GetAllMeasures(ctx context.Context, param GetMeasureParam) ([]MeasureGroup, error) {
 	measures := make([]MeasureGroup, 0)
-	done := false
-	for !done {
+	for {
 		resp, err := c.GetMeasure(ctx, param)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get all measures at offset %d: %w", param.Offset, err)

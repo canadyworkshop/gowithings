@@ -197,6 +197,9 @@ type NonceRequest struct {
 // getNonce retrieves a nonce from the withigns API.
 func (client *Client) getNonce(ctx context.Context) (string, error) {
 	req, err := http.NewRequest(http.MethodPost, SignatureURL, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %s", err)
+	}
 
 	ts := strconv.FormatInt(time.Now().Unix(), 10)
 	signatureStr := genHMACSHA256String(client.config.ClientSecret, fmt.Sprintf("%s,%s,%s", "getnonce", client.config.ClientID, ts))
