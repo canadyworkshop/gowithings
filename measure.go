@@ -53,7 +53,8 @@ var MeasureTypes = map[string]string{
 	"ElectrochemicalSkinConductance": "229",
 }
 
-var MeasureTypesByKey = map[int]string{
+// MeasureTypesByID provides a map of the measure types indexed by their id.
+var MeasureTypesByID = map[int]string{
 	1:   "Weight",
 	4:   "Height",
 	5:   "FatFreeMassKG",
@@ -150,39 +151,39 @@ func (m Measure) Float64() float64 {
 }
 
 // URLEncode encodes the parameter values into a URL encoded from.
-func (m GetMeasureParam) URLEncode() (string, error) {
+func (param GetMeasureParam) URLEncode() (string, error) {
 	v := url.Values{}
 	v.Add("action", "getmeas")
 
-	switch len(m.MeasureTypes) {
+	switch len(param.MeasureTypes) {
 	case 0:
 		return "", errors.New("no measure types provided")
 	case 1:
-		v.Add("meastype", m.MeasureTypes[0])
+		v.Add("meastype", param.MeasureTypes[0])
 	default:
-		v.Add("meastypes", strings.Join(m.MeasureTypes, ","))
+		v.Add("meastypes", strings.Join(param.MeasureTypes, ","))
 	}
 
-	if m.Category == "0" || m.Category == "1" {
+	if param.Category == "0" || param.Category == "1" {
 		v.Add("category", "1")
 	} else {
-		v.Add("category", (m.Category))
+		v.Add("category", (param.Category))
 	}
 
-	if !m.LastUpdate.IsZero() {
-		v.Add("lastupdate", strconv.FormatInt(m.LastUpdate.Unix(), 10))
+	if !param.LastUpdate.IsZero() {
+		v.Add("lastupdate", strconv.FormatInt(param.LastUpdate.Unix(), 10))
 	}
 
-	if !m.StartDate.IsZero() {
-		v.Add("startdate", strconv.FormatInt(m.StartDate.Unix(), 10))
+	if !param.StartDate.IsZero() {
+		v.Add("startdate", strconv.FormatInt(param.StartDate.Unix(), 10))
 	}
 
-	if !m.EndDate.IsZero() {
-		v.Add("enddate", strconv.FormatInt(m.EndDate.Unix(), 10))
+	if !param.EndDate.IsZero() {
+		v.Add("enddate", strconv.FormatInt(param.EndDate.Unix(), 10))
 	}
 
-	if m.Offset > 0 {
-		v.Add("offset", strconv.Itoa(m.Offset))
+	if param.Offset > 0 {
+		v.Add("offset", strconv.Itoa(param.Offset))
 	}
 
 	return v.Encode(), nil
