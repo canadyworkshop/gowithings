@@ -28,11 +28,15 @@ func (c *UserClient) newRequest(ctx context.Context, method, path string, body i
 
 	// Checking to determine if we need to try and refresh the token.
 	switch {
-	case c.token.AccessToken == "":
-		return nil, fmt.Errorf("no access token provided")
-	case time.Now().Sub(c.token.AccessTokenCreationDate).Hours() > 8760:
-		return nil, fmt.Errorf("access token expired")
-	case c.token.RefreshToken == "" || int(time.Now().Sub(c.token.RefreshTokenCreationDate).Seconds()) >= c.token.ExpiresIn:
+	// If the client has no refresh token then bail out even if we have an access token. The ability to refresh is
+	// mandatory for the client.
+	case c.token.RefreshToken == "":
+		return nil, fmt.Errorf("no refresh token provided so cannot update")
+	// If the refresh token has expired bail out as we cannot perform refreshes even if we need to.
+	case time.Now().Sub(c.token.RefreshTokenCreationDate).Hours() > 8760:
+		return nil, fmt.Errorf("refresh token expired")
+	// If we don't have an access token or if our current access token is expired we need a new one.
+	case c.token.AccessToken == "" || int(time.Now().Sub(c.token.AccessTokenCreationDate).Seconds()) >= c.token.ExpiresIn:
 		if err := c.refreshToken(ctx); err != nil {
 			return nil, fmt.Errorf("failed to update refresh token: %w", err)
 		}
