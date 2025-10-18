@@ -2,7 +2,6 @@ package gowithings_test
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -48,11 +47,8 @@ func TestUserClient_GetMeasure(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	for _, g := range r.MeasureGroups {
-		for _, m := range g.Measures {
-			fmt.Printf("%v: %v\n", gowithings.MeasureTypesByKey[m.Type], m.Float64())
-		}
-
+	if len(r.MeasureGroups) < 0 {
+		t.Errorf("expected at least one measure group, got %d", len(r.MeasureGroups))
 	}
 }
 
@@ -81,5 +77,7 @@ func TestUserClient_GetAllMeasures(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(len(r))
+	if len(r) < 2000 {
+		t.Errorf("expected at least 2000 measure groups, got %d", len(r))
+	}
 }
