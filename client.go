@@ -134,7 +134,7 @@ func (client *Client) NewUserClient(token RequestToken) *UserClient {
 // NewUserClientFromRefreshToken generates a new user client from the refresh token provided.
 // This is primarily used when loading a refresh token from a stored location to make
 // a new request for that user.
-func (client *Client) NewUserClientFromRefreshToken(ctx context.Context, refreshToken string) (*UserClient, error) {
+func (client *Client) NewUserClientFromRefreshToken(ctx context.Context, refreshToken string, refreshTokenCreationDate time.Time) (*UserClient, error) {
 	c := UserClient{
 		clientID:     client.config.ClientID,
 		clientSecret: client.config.ClientSecret,
@@ -147,7 +147,7 @@ func (client *Client) NewUserClientFromRefreshToken(ctx context.Context, refresh
 			CSRFToken:                "",
 			TokenType:                "",
 			AccessTokenCreationDate:  time.Time{},
-			RefreshTokenCreationDate: time.Time{},
+			RefreshTokenCreationDate: refreshTokenCreationDate,
 		},
 		httpClient: &http.Client{},
 	}

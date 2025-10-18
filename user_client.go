@@ -30,9 +30,9 @@ func (c *UserClient) newRequest(ctx context.Context, method, path string, body i
 	switch {
 	case c.token.AccessToken == "":
 		return nil, fmt.Errorf("no access token provided")
-	case time.Now().Sub(c.token.AccessTokenCreationDate).Hours() > 8760:
-		return nil, fmt.Errorf("access token expired")
-	case c.token.RefreshToken == "" || int(time.Now().Sub(c.token.RefreshTokenCreationDate).Seconds()) >= c.token.ExpiresIn:
+	case time.Now().Sub(c.token.RefreshTokenCreationDate).Hours() > 8760:
+		return nil, fmt.Errorf("refresh token expired")
+	case c.token.RefreshToken == "" || int(time.Now().Sub(c.token.AccessTokenCreationDate).Seconds()) >= c.token.ExpiresIn:
 		if err := c.refreshToken(ctx); err != nil {
 			return nil, fmt.Errorf("failed to update refresh token: %w", err)
 		}
