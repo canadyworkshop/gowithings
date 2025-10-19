@@ -90,7 +90,7 @@ func (c *UserClient) refreshToken(ctx context.Context) error {
 	if reqTokenResp.Status != 0 {
 		return fmt.Errorf("failed with status %d", reqTokenResp.Status)
 	}
-	reqTokenResp.Body.AccessTokenCreationDate = c.token.AccessTokenCreationDate
+	reqTokenResp.Body.AccessTokenCreationDate = createdAt
 	reqTokenResp.Body.RefreshTokenCreationDate = createdAt
 
 	c.token = reqTokenResp.Body
