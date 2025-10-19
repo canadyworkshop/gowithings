@@ -123,30 +123,30 @@ type MeasureResponse struct {
 // MeasureGroup is a group of measurements as returned by the API. Each group of measurements were recoreded at the
 // exact same time by the same device.
 type MeasureGroup struct {
-	GroupID      int       `json:"grpid"`
-	Attrib       int       `json:"attrib"`
+	GroupID      int64     `json:"grpid"`
+	Attrib       int64     `json:"attrib"`
 	Date         int64     `json:"date"`
 	Created      int64     `json:"created"`
 	Modified     int64     `json:"modified"`
-	Category     int       `json:"category"`
+	Category     int64     `json:"category"`
 	DeviceID     string    `json:"deviceid"`
-	HashDeviceID int       `json:"has_deviceid"`
+	HashDeviceID string    `json:"hash_device_id"`
 	Timezone     string    `json:"timezone"`
 	Measures     []Measure `json:"measures"`
 }
 
 // Measure is a specific measurement as returned by the API.
 type Measure struct {
-	Value    int     `json:"value"`
-	Type     int     `json:"type"`
-	Unit     int     `json:"unit"`
-	Algo     int     `json:"algo"`
+	Value    int64   `json:"value"`
+	Type     int64   `json:"type"`
+	Unit     int64   `json:"unit"`
+	Algo     int64   `json:"algo"`
 	FM       float64 `json:"fm"`
-	Position int     `json:"position"`
+	Position int64   `json:"position"`
 }
 
 func (m Measure) ValueFloat64() float64 {
-	return float64(m.Value) * math.Pow10(m.Unit)
+	return float64(m.Value) * math.Pow10(int(m.Unit))
 }
 
 func (mg MeasureGroup) MeasuredAt() time.Time {
