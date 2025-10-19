@@ -113,7 +113,7 @@ type GetMeasureResponseWrapper struct {
 
 // MeasureResponse is the raw response of a get measure API request.
 type MeasureResponse struct {
-	UpdateTime    int            `json:"updatetime"`
+	UpdateTime    int64          `json:"updatetime"`
 	Timezone      string         `json:"timezone"`
 	More          int            `json:"more"`
 	Offset        int            `json:"offset"`
@@ -125,9 +125,9 @@ type MeasureResponse struct {
 type MeasureGroup struct {
 	GroupID      int       `json:"grpid"`
 	Attrib       int       `json:"attrib"`
-	Date         int       `json:"date"`
-	Created      int       `json:"created"`
-	Modified     int       `json:"modified"`
+	Date         int64     `json:"date"`
+	Created      int64     `json:"created"`
+	Modified     int64     `json:"modified"`
 	Category     int       `json:"category"`
 	DeviceID     string    `json:"deviceid"`
 	HashDeviceID int       `json:"has_deviceid"`
@@ -145,8 +145,12 @@ type Measure struct {
 	Position int     `json:"position"`
 }
 
-func (m Measure) Float64() float64 {
+func (m Measure) ValueFloat64() float64 {
 	return float64(m.Value) * math.Pow10(m.Unit)
+}
+
+func (mg MeasureGroup) MeasuredAt() time.Time {
+	return time.Unix(mg.Date, 0)
 }
 
 // URLEncode encodes the parameter values into a URL encoded from.
